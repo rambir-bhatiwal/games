@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Neon Horizon: Cosmic Dreamworld</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Canvas for rendering cosmic game graphics -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- High-Tech Heads-Up Display (HUD) -->
+        <div id="hud" class="overlay hidden">
+            <div class="hud-item" id="hud-score">
+                <span>SCORE</span>
+                <span class="value">0</span>
+            </div>
+            <div class="hud-item" id="hud-speed">
+                <span>SPEED</span>
+                <span class="value">0 km/h</span>
+            </div>
+            <div class="hud-item" id="hud-level">
+                <span>SECTOR</span>
+                <span class="value">1/10</span>
+            </div>
+            <div class="hud-item" id="hud-laps">
+                <span>LAP</span>
+                <span class="value">1</span>
+            </div>
+            <div id="hud-powerups" class="hud-powerups">
+                <div id="hud-shield-badge" class="powerup-badge hidden">🛡️ SHIELD</div>
+                <div id="hud-boost-badge" class="powerup-badge hidden">⚡ BOOST</div>
+                <div id="hud-multi-badge" class="powerup-badge hidden">✨ 2X</div>
+            </div>
+            <button id="pause-btn" class="icon-button" aria-label="Pause Warp">⏸</button>
+        </div>
+
+        <!-- Incoming Celestial Hazard Warning Alert -->
+        <div id="hud-warning" class="hud-warning-alert hidden">⚠️ INCOMING CELESTIAL DROP ⚠️</div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen-overlay">
+            <h1 class="game-title">NEON HORIZON<br><span class="subtitle">COSMIC DREAMWORLD</span></h1>
+            <div class="high-score-display">HIGH SCORE: <span id="high-score-val">0</span></div>
+            <div class="instructions">
+                <p><strong>FLIGHT CONTROLS:</strong></p>
+                <p>⌨️ <strong>Arrow Keys / WASD:</strong> Accelerate, Brake & Steer</p>
+                <p>📱 <strong>Touch / Drag:</strong> Precision Steer on Mobile</p>
+                <p>⚡ <strong>Hyper-Track:</strong> Stay inside the pulsing laser rails!</p>
+            </div>
+            <button id="start-button" class="action-btn">ENGAGE HYPERDRIVE</button>
+        </div>
+
+        <!-- Level Clear Screen -->
+        <div id="level-clear-screen" class="screen-overlay hidden">
+            <h2 class="screen-title text-success">SECTOR CONQUERED</h2>
+            <p class="stage-name" id="lc-stage-name">Sector 1: Astral Runway</p>
+            <div class="stats-box">
+                <div class="stats-row"><span>Time Elapsed:</span> <span id="lc-time">0.0s</span></div>
+                <div class="stats-row"><span>Sector Score:</span> <span id="lc-stage-score">0</span></div>
+                <div class="stats-row"><span>Total Score:</span> <span id="lc-total-score">0</span></div>
+            </div>
+            <button id="next-level-btn" class="action-btn">NEXT SECTOR</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen-overlay hidden">
+            <h2 class="screen-title text-danger">SYSTEM CRITICAL</h2>
+            <p id="game-over-reason" class="failure-reason">Your hypercar suffered catastrophic structural failure!</p>
+            <div class="stats-box">
+                <div class="stats-row"><span>Final Score:</span> <span id="go-score">0</span></div>
+                <div class="stats-row"><span>Laps Completed:</span> <span id="go-laps">0</span></div>
+                <div class="stats-row"><span>Sector Reached:</span> <span id="go-level">1</span></div>
+            </div>
+            <button id="retry-button" class="action-btn">REBOOT HYPERDRIVE</button>
+            <p class="sub-instructions">Press Space or Tap to Reboot</p>
+        </div>
+
+        <!-- Grand Victory Screen -->
+        <div id="victory-screen" class="screen-overlay hidden">
+            <h2 class="screen-title text-victory animate-pulse">🏆 COSMIC CHAMPION 🏆</h2>
+            <p class="victory-subtitle">GRAND VICTORY!</p>
+            <p class="victory-congrats">You mastered all 10 cosmic sectors and ascended to the Astral Hall of Fame!</p>
+            <div class="stats-box">
+                <div class="stats-row"><span>Grand Score:</span> <span id="vic-score">0</span></div>
+                <div class="stats-row"><span>Mission Time:</span> <span id="vic-time">0.0s</span></div>
+                <div class="stats-row"><span>Laps Completed:</span> <span id="vic-laps">10</span></div>
+            </div>
+            <button id="restart-button" class="action-btn">REPLAY HORIZON</button>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-screen" class="screen-overlay hidden">
+            <h2 class="screen-title">WARP SUSPENDED</h2>
+            <div class="paused-text">Race telemetry is temporarily on standby.</div>
+            <button id="resume-button" class="action-btn">RESUME WARP</button>
+        </div>
+    </div>
+
+    <!-- Main Game Script -->
+    <script src="game.js"></script>
+</body>
+</html>
