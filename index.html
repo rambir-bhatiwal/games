@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Cosmic Gate Runner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Main Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- In-Game HUD Overlay -->
+        <div id="hud" class="hidden">
+            <!-- Top HUD Bar -->
+            <div class="hud-top-bar">
+                <div class="hud-pill score">
+                    <span class="label">Score</span>
+                    <span id="hud-score-val" class="value">0</span>
+                </div>
+
+                <div class="hud-pill coins">
+                    <span class="label">🪙</span>
+                    <span id="hud-coins-val" class="value">0</span>
+                </div>
+
+                <div class="hud-pill lives" id="hud-lives-container">
+                    <span class="heart-icon" id="heart-1">❤️</span>
+                    <span class="heart-icon" id="heart-2">❤️</span>
+                    <span class="heart-icon" id="heart-3">❤️</span>
+                </div>
+
+                <div class="hud-pill level">
+                    <span class="label">Sector</span>
+                    <span id="hud-level-val" class="value">1</span>
+                </div>
+
+                <div class="hud-pill gates">
+                    <span class="label">Gates</span>
+                    <span id="hud-gates-val" class="value">0/4</span>
+                </div>
+
+                <button id="hud-audio-btn" class="hud-btn" title="Toggle Sound">🔊</button>
+                <button id="hud-pause-btn" class="hud-btn" title="Pause Game (P / Esc)" aria-label="Pause Game"><span class="pause-icon">||</span></button>
+            </div>
+
+            <!-- Quiz Gate HUD Banner (Hidden until 5-second active running threshold) -->
+            <div id="quiz-banner" class="hidden">
+                <div class="quiz-header">
+                    <span id="quiz-category" class="quiz-badge">ASTRONOMY</span>
+                    <span id="quiz-timer" class="quiz-timer-label">GATE APPROACHING (5.0s)</span>
+                </div>
+                <div id="quiz-question" class="quiz-question-text">Loading celestial gate coordinates...</div>
+                <div class="quiz-options-grid">
+                    <div id="quiz-opt-0" class="quiz-option-pill"><span class="lane-tag">◀ LEFT</span> <span class="opt-text">-</span></div>
+                    <div id="quiz-opt-1" class="quiz-option-pill"><span class="lane-tag">▲ CENTER</span> <span class="opt-text">-</span></div>
+                    <div id="quiz-opt-2" class="quiz-option-pill"><span class="lane-tag">▶ RIGHT</span> <span class="opt-text">-</span></div>
+                </div>
+                <div class="quiz-progress-bar-wrap">
+                    <div id="quiz-progress" class="quiz-progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Bottom Helpers & Feedback -->
+            <div class="hud-bottom-bar">
+                <div class="hud-controls-hint">
+                    <span>⬅️ ➡️ Lane</span>
+                    <span>⬆️ Jump</span>
+                    <span>⬇️ Slide</span>
+                </div>
+                <div id="hud-invulnerable" class="hud-invulnerable-badge hidden">
+                    🛡️ SHIELD ACTIVE
+                </div>
+            </div>
+
+            <!-- Mobile Touch Virtual Controls -->
+            <div class="mobile-controls">
+                <div class="touch-lane-group">
+                    <button id="touch-left" class="touch-btn">◀</button>
+                    <button id="touch-right" class="touch-btn">▶</button>
+                </div>
+                <div class="touch-action-group">
+                    <button id="touch-slide" class="touch-btn">▼</button>
+                    <button id="touch-jump" class="touch-btn">▲</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen Overlays -->
+
+        <!-- 1. Start Screen -->
+        <div id="start-screen" class="screen-overlay">
+            <div class="screen-card">
+                <h1 class="screen-title">Cosmic Gate Runner</h1>
+                <p class="screen-subtitle">
+                    Sprint across dimensional tracks, jump over crystals, slide under energy barriers, and choose the correct gate to survive!
+                </p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Controls</span>
+                        <span class="stat-value">A/D or Arrows</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Jump / Slide</span>
+                        <span class="stat-value">Space / Down</span>
+                    </div>
+                </div>
+                <button id="start-btn" class="cta-button">Engage Hyperdrive</button>
+                <span class="helper-text" id="start-instructions">Press Space or Click to Start</span>
+            </div>
+        </div>
+
+        <!-- 2. Level Clear Screen -->
+        <div id="level-clear-screen" class="screen-overlay hidden">
+            <div class="screen-card">
+                <h1 class="screen-title">Sector Cleared!</h1>
+                <p id="lc-sector-title" class="screen-subtitle">Celestial Crystal Realm Complete</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Sector Score</span>
+                        <span id="lc-stage-score" class="stat-value highlight">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Time Elapsed</span>
+                        <span id="lc-time" class="stat-value">0.0s</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Gates Solved</span>
+                        <span id="lc-gates" class="stat-value">4/4</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Total Score</span>
+                        <span id="lc-total-score" class="stat-value highlight">0</span>
+                    </div>
+                </div>
+                <button id="next-level-btn" class="cta-button">Advance to Next Sector</button>
+                <span class="helper-text">Press Spacebar to Continue</span>
+            </div>
+        </div>
+
+        <!-- 3. Game Over Screen -->
+        <div id="game-over-screen" class="screen-overlay hidden">
+            <div class="screen-card gameover">
+                <h1 class="screen-title">Mission Terminated</h1>
+                <p id="go-reason" class="screen-subtitle">Your ship collided with a dimensional barrier.</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Final Score</span>
+                        <span id="go-score" class="stat-value highlight">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Coins Collected</span>
+                        <span id="go-coins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Sector Reached</span>
+                        <span id="go-sector" class="stat-value">1</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Gates Solved</span>
+                        <span id="go-gates" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="retry-btn" class="cta-button magenta">Respawn at Checkpoint</button>
+                <span class="helper-text">Press Spacebar to Retry</span>
+            </div>
+        </div>
+
+        <!-- 4. Grand Victory Screen -->
+        <div id="victory-screen" class="screen-overlay hidden">
+            <div class="screen-card victory">
+                <h1 class="screen-title">Cosmic Champion!</h1>
+                <p class="screen-subtitle">You conquered all 10 Cosmic Gauntlets and mastered the knowledge of the stars!</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Grand Total Score</span>
+                        <span id="vic-score" class="stat-value highlight">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Total Flight Time</span>
+                        <span id="vic-time" class="stat-value">0.0s</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Total Coins</span>
+                        <span id="vic-coins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Total Gates Cleared</span>
+                        <span id="vic-gates" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="restart-btn" class="cta-button gold">New Championship Run</button>
+                <span class="helper-text">Press Spacebar to Restart</span>
+            </div>
+        </div>
+
+        <!-- 5. Pause Screen -->
+        <div id="pause-screen" class="screen-overlay hidden">
+            <div class="screen-card">
+                <h1 class="screen-title">PAUSED</h1>
+                <p class="screen-subtitle">Hyperdrive paused. Systems standing by.</p>
+                <button id="resume-btn" class="cta-button">Resume Game</button>
+                <span class="helper-text">Press P or Escape to Resume</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Modules -->
+    <script src="questions.js"></script>
+    <script src="levels.js"></script>
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
